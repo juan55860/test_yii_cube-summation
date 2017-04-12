@@ -129,7 +129,6 @@ class SiteController extends Controller
             }
         }
         // display the cube summation
-        var_dump($model);
         $this->render('cube_summation',array('model'=>$model));
     }
 }

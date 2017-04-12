@@ -7,7 +7,7 @@ class CubeSummationForm extends CFormModel
 
     private $cube;
 
-    private $cases;
+    public $cases = [];
 
     private $testCases;
 
@@ -30,16 +30,55 @@ class CubeSummationForm extends CFormModel
         $this->input = explode("\n", $this->problem);
         $this->testCases = trim($this->input[0]);
         if (!$this->validateTestCases()) {
-            $this->addErrorForInvalidDimension();
+            $this->addErrorForTestCases();
+            return false;
+        }
+        $this->createCases();
+        if (!$this->reviewEachCase()){
+            $this->addErrorForTestCaseFormed();
             return false;
         }
 
+        if (count($this->cases)!= $this->testCases) {
+            $this->addErrorForTestCasesSended();
+            return false;
+        }
         return true;
     }
 
-    public function resolve(){
+    private function createCases()
+    {
+        $problem = 0;
+        for ($i = 1; $i < count($this->input); $i++) {
+            $case = explode(" ", $this->input[$i]);
+            if ($this->validateOperations($case[0])=== false) {
+                array_push($this->cases, ["test" => $this->input[$i], "problems" => [] ]);
+                $problem +=1 ;
+            }
+            else {
+                array_push($this->cases[$problem-1]["problems"], $this->input[$i]);
+            }
+        }
+    }
+
+
+    /**
+     * @return bool
+     */
+    private function reviewEachCase()
+    {
+        foreach ($this->cases as $case) {
+            $operations = explode(" ", $case['test']);
+            if($operations[1] != count($case["problems"])){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function resolve()
+    {
         $this->fillCubeWithZeros($this->dimension );
-        $this->testCases = $this->getProblem($this->input);
     }
 
     /**
@@ -50,15 +89,11 @@ class CubeSummationForm extends CFormModel
         return $this->testCases >= self::MIN_VALUE_TEST_CASES && $this->testCases <= self::MAX_VALUE_TEST_CASES;
     }
 
-    private function addErrorForInvalidDimension()
-    {
-        $this->addError('problem', 'the dimension should be between '. self::MIN_VALUE_TEST_CASES .' to ' . self::MAX_VALUE_TEST_CASES);
-    }
-
     /**
      *
      */
-    private function validateDimesions(){
+    private function validateDimensions()
+    {
 
     }
 
@@ -83,5 +118,20 @@ class CubeSummationForm extends CFormModel
                 }
             }
         }
+    }
+
+    private function addErrorForTestCases()
+    {
+        $this->addError('problem', 'the test cases should be between '. self::MIN_VALUE_TEST_CASES .' to ' . self::MAX_VALUE_TEST_CASES);
+    }
+
+    private function addErrorForTestCasesSended()
+    {
+        $this->addError('problem', 'the units test cases are different that the sended');
+    }
+
+    private function addErrorForTestCaseFormed()
+    {
+        $this->addError('problem', 'the test cases are bad created');
     }
 }
