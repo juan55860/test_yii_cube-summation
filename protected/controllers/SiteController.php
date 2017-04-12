@@ -123,10 +123,13 @@ class SiteController extends Controller
         {
             $model->attributes = $_POST['CubeSummationForm'];
             // validate user input and redirect to the previous page if valid
-            if($model->validate())
+            if($model->validate() && $model->validateInput())
+            {
                 return $this->render('solution_cube_summation',array('model'=>$model));
+            }
         }
         // display the cube summation
+        var_dump($model);
         $this->render('cube_summation',array('model'=>$model));
     }
 }

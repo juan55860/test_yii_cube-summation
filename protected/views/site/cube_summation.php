@@ -26,7 +26,7 @@ $this->breadcrumbs=array(
 
     <div class="row">
         <?php echo $form->labelEx($model,'problem'); ?>
-        <?php echo $form->textField($model,'problem'); ?>
+        <?php echo $form->textArea($model,'problem'); ?>
         <?php echo $form->error($model,'problem'); ?>
     </div>
 
