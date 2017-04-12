@@ -106,4 +106,27 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
+
+	public function actionCube_summation()
+    {
+        $model=new CubeSummationForm;
+
+        // if it is ajax validation request
+        if(isset($_POST['ajax']) && $_POST['ajax']=== 'cube-summation-form')
+        {
+            echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+
+        // collect user input data
+        if(isset($_POST['CubeSummationForm']))
+        {
+            $model->attributes = $_POST['CubeSummationForm'];
+            // validate user input and redirect to the previous page if valid
+            if($model->validate())
+                return $this->render('solution_cube_summation',array('model'=>$model));
+        }
+        // display the cube summation
+        $this->render('cube_summation',array('model'=>$model));
+    }
 }
