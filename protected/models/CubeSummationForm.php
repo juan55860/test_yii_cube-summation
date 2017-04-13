@@ -25,6 +25,7 @@ class CubeSummationForm extends CFormModel
      */
     public function validateInput()
     {
+        $this->problem = $this->removeSpaces($this->problem);
         $this->input = explode("\n", $this->problem);
         $this->testCases = trim($this->input[0]);
         if (!$this->validateTestCases()) {
