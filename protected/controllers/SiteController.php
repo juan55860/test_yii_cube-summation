@@ -125,6 +125,7 @@ class SiteController extends Controller
             // validate user input and redirect to the previous page if valid
             if($model->validate() && $model->validateInput())
             {
+                $model->resolve();
                 return $this->render('solution_cube_summation',array('model'=>$model));
             }
         }
